@@ -1,0 +1,33 @@
+<resources>
+
+    <string name="app_name">HeadacheDiary</string>
+
+    <!--Questions-->
+    <string name="first_question">Болела ли у Вас голова в указанную дату?</string>
+    <string name="second_question">Укажите время начала и окончания\nприступа головной боли:</string>
+    <!--Questions-->
+
+
+
+    <!--General strings-->
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="to_previous_page">Назад</string>
+    <string name="to_next_page">Далее</string>
+    <string name="to_next_page_skip">Пропустить</string>
+    <!--General strings-->
+
+    <!--MainActivity-->
+    <string name="start_survey">Начать опрос</string>
+    <string name="stat_icon">stat_icon</string>
+    <string name="calendar_icon">calendar_icon</string>
+    <string name="p_icon">p_icon</string>
+    <!--MainActivity-->
+
+
+    <!--SecondActivity-->
+    <string name="start_time">Начало:</string>
+    <string name="end_time">Окончание:</string>
+
+    <!--SecondActivity-->
+</resources>
