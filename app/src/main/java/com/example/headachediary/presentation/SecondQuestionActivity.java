@@ -1,10 +1,11 @@
-package com.example.headachediary;
+package com.example.headachediary.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.example.headachediary.R;
 
 public class SecondQuestionActivity extends AppCompatActivity {
 

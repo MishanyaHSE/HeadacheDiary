@@ -28,6 +28,13 @@
     <!--SecondActivity-->
     <string name="start_time">Начало:</string>
     <string name="end_time">Окончание:</string>
-
     <!--SecondActivity-->
+    <string name="email">example@example.com</string>
+    <string name="password">your password</string>
+    <string name="login">Авторизоваться</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="register">Зарегистрироваться</string>
+    <!--FragmentLogin-->
+
+    <!--FragmentLogin-->
 </resources>

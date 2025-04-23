@@ -1,11 +1,13 @@
-package com.example.headachediary;
+package com.example.headachediary.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TimePicker;
+
+import com.example.headachediary.R;
+import com.example.headachediary.domain.headache.SurveyData;
 
 public class FirstQuestionActivity extends AppCompatActivity {
 
@@ -27,7 +29,7 @@ public class FirstQuestionActivity extends AppCompatActivity {
 
     public void goToMainMenu(View view) {
         sd.isHeadache = false;
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
     }
 }

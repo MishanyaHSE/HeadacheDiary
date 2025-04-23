@@ -2,7 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:networkSecurityConfig="@xml/security_config"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,40 +19,43 @@
         android:theme="@style/Theme.HeadacheDiary"
         tools:targetApi="31">
         <activity
-            android:name=".NinthQuestionActivity"
+            android:name=".presentation.NinthQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".EighthQuestionActivity"
+            android:name=".presentation.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SeventhQuestionActivity"
+            android:name=".presentation.EighthQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".SixthQuestionActivity"
+            android:name=".presentation.SeventhQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistrationActivity"
+            android:name=".presentation.SixthQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".StatisticsActivity"
+            android:name=".presentation.RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".FifthQuestionActivity"
+            android:name=".presentation.StatisticsActivity"
             android:exported="false" />
         <activity
-            android:name=".FourtQuestionActivity"
+            android:name=".presentation.FifthQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".ThirdQuestionActivity"
+            android:name=".presentation.FourtQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".SecondQuestionActivity"
+            android:name=".presentation.ThirdQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".FirstQuestionActivity"
+            android:name=".presentation.SecondQuestionActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.FirstQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.auth.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

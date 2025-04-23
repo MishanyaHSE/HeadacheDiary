@@ -1,8 +1,10 @@
-package com.example.headachediary;
+package com.example.headachediary.presentation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.headachediary.R;
 
 public class FifthQuestionActivity extends AppCompatActivity {
 
