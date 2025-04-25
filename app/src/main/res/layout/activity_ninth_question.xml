@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:srcCompat="@drawable/statistics_icon" />
+            app:srcCompat="@drawable/ic_statistics" />
 
         <ImageButton
             android:id="@+id/homeButton"
@@ -67,7 +67,7 @@
             app:layout_constraintStart_toEndOf="@id/statisticsButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:srcCompat="@drawable/calendar_icon" />
+            app:srcCompat="@drawable/ic_calendar" />
 
         <ImageButton
             android:id="@+id/profileButton"
@@ -79,7 +79,7 @@
             app:layout_constraintStart_toEndOf="@id/homeButton"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintHorizontal_weight="1"
-            app:srcCompat="@drawable/profile_icon" />
+            app:srcCompat="@drawable/ic_profile" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

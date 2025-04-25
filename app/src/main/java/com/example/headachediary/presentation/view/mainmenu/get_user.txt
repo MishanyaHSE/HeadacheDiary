@@ -1,0 +1,25 @@
+//        getUser(this);
+
+
+
+//    private void getUser(Context context) {
+//        RetrofitClient.getApiService(context).getCurrentUser().enqueue(new Callback<UserResponse>() {
+//
+//            @Override
+//            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+//                if (response.isSuccessful()) {
+//                    UserResponse user = response.body();
+//                    Log.d("GETTING USER", "user id: " + user.getId());
+//                    Log.d("GETTING USER", "user email: " + user.getEmail());
+//                    Log.d("GETTING USER", "user name: " + user.getName());
+//                } else {
+//                    Log.e("GETTING USER", "Error: " + response.code());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserResponse> call, Throwable t) {
+//                Log.e("GETTING USER", "Failure: " + t.getMessage());
+//            }
+//        });
+//    }

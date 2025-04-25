@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.FifthQuestionActivity">
+    tools:context=".presentation.view.other.FifthQuestionActivity">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -26,7 +26,7 @@
             android:contentDescription="@string/stat_icon"
             android:cropToPadding="false"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/statistics_icon" />
+            app:srcCompat="@drawable/ic_statistics" />
 
         <ImageButton
             android:id="@+id/homeButton"
@@ -38,7 +38,7 @@
             android:contentDescription="@string/calendar_icon"
             android:cropToPadding="false"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/calendar_icon" />
+            app:srcCompat="@drawable/ic_calendar" />
 
         <ImageButton
             android:id="@+id/profileButton"
@@ -50,7 +50,7 @@
             android:contentDescription="@string/p_icon"
             android:cropToPadding="false"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/profile_icon" />
+            app:srcCompat="@drawable/ic_profile" />
 
     </LinearLayout>
 
