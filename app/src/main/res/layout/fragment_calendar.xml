@@ -1,22 +1,25 @@
-<!-- Перенесите ваш текущий ConstraintLayout с CalendarView и кнопками сюда -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <CalendarView
+    <!-- Основной календарь (50% высоты экрана) -->
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/calendar_margin_horizontal"
+        android:layout_marginTop="@dimen/calendar_margin_top"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Группа кнопок действий -->
+    <!-- Контейнер кнопок -->
     <LinearLayout
         android:id="@+id/buttonsGroup"
         android:layout_width="wrap_content"
@@ -26,32 +29,45 @@
         app:layout_constraintTop_toBottomOf="@id/calendarView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="@dimen/default_margin">
 
         <Button
             android:id="@+id/btnDelete"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="Удалить"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="@dimen/small_margin"/>
 
         <Button
             android:id="@+id/btnEdit"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:text="Изменить"/>
     </LinearLayout>
 
-    <!-- Кнопка Добавить -->
+    <!-- Кнопка "Добавить" -->
     <Button
         android:id="@+id/btnAdd"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:text="Добавить"
+        android:layout_height="wrap_content"
+        android:text="Сделать запись"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/calendarView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="@dimen/default_margin"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="164dp"
+        tools:layout_editor_absoluteY="580dp"
+        app:layout_constraintTop_toBottomOf="@id/calendarView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

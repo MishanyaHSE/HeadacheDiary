@@ -1,5 +1,11 @@
 package com.example.headachediary.presentation.view.auth;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,19 +14,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.headachediary.R;
-import com.example.headachediary.data.repository.Repository;
+import com.example.headachediary.data.source.util.manager.TokenManager;
 import com.example.headachediary.domain.auth.UserAuth;
-import com.example.headachediary.presentation.viewmodel.LoginViewModel;
+import com.example.headachediary.presentation.view.mainmenu.MainActivity;
+import com.example.headachediary.presentation.viewmodel.auth.LoginViewModel;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel loginViewModel;
-    private Repository repository;
+    private ProgressDialog progressDialog;
     private EditText emailEditText, passwordEditText;
 
     @Override
@@ -37,8 +48,8 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> attemptLogin());
         registerButton.setOnClickListener(v -> goToRegister());
         forgotPassword.setOnClickListener(v -> goToForgotPassword());
-        repository = new Repository(requireContext());
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        setupObserver();
         return view;
     }
 
@@ -50,29 +61,6 @@ public class LoginFragment extends Fragment {
         cred.setPassword(password);
         Log.d("GETTING TOKEN", cred.toString());
         loginViewModel.login(cred);
-
-//        RetrofitClient.getApiService(requireContext()).login(cred).enqueue(new Callback<TokenResponse>() {
-//
-//            @Override
-//            public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
-//                if (response.isSuccessful()) {
-//                    TokenResponse token = response.body();
-//                    Log.d("GETTING TOKEN", "Got token: " + token.getAccess_token());
-//                    TokenManager tokenManager = new TokenManager(requireContext());
-//                    tokenManager.saveToken(token.getAccess_token());
-//                    Intent intent = new Intent(requireContext(), MainActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Log.e("GETTING TOKEN", "Error: " + response.code());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<TokenResponse> call, Throwable t) {
-//                Log.e("GETTING TOKEN", "Failure: " + t.getMessage());
-//            }
-//        });
-
     }
 
     private void goToRegister() {
@@ -84,4 +72,48 @@ public class LoginFragment extends Fragment {
         ((AuthActivity)requireActivity())
                 .replaceFragment(new ForgotPasswordFragment(), "forgot_password_fragment");
     }
+
+    private void showLoading() {
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage("Авторизуемся...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideLoading() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void showError(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Ошибка")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private void setupObserver() {
+        loginViewModel.getLoginState().observe(getViewLifecycleOwner(), state -> {
+            switch(state.getStatus()) {
+                case ERROR:
+                    hideLoading();
+                    showError(state.getError());
+                    break;
+                case LOADING:
+                    showLoading();
+                    break;
+                case SUCCESS:
+                    hideLoading();
+                    TokenManager tokenManager = new TokenManager(requireContext());
+                    tokenManager.saveToken(state.getData().getAccess_token());
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    requireContext().startActivity(intent);
+                    break;
+            }
+        });
+    }
+
 }

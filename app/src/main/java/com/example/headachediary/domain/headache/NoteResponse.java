@@ -4,6 +4,8 @@ package com.example.headachediary.domain.headache;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class NoteResponse {
 
     @SerializedName("id")
@@ -26,7 +28,7 @@ public class NoteResponse {
     private Integer intensity;
     @SerializedName("medicine")
     @Expose
-    private String medicine;
+    private List<Medicine> medicine;
 
     public Integer getId() {
         return id;
@@ -76,11 +78,11 @@ public class NoteResponse {
         this.intensity = intensity;
     }
 
-    public String getMedicine() {
+    public List<Medicine> getMedicine() {
         return medicine;
     }
 
-    public void setMedicine(String medicine) {
+    public void setMedicine(List<Medicine> medicine) {
         this.medicine = medicine;
     }
 
@@ -142,7 +144,7 @@ public class NoteResponse {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof NoteResponse)) {
+        if ((other instanceof NoteResponse) == false) {
             return false;
         }
         NoteResponse rhs = ((NoteResponse) other);

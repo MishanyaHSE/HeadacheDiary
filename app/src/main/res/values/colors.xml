@@ -5,4 +5,8 @@
     <color name="bg_element">#75E7F7</color>
     <color name="blue">#75E7F7</color>
     <color name="control_highlight">#2A48CA</color>
+    <color name="gray">#B1ADAD</color>
+    <color name="gray_light">#ECECEC</color>
+    <color name="error">#FF5252</color>
+    <color name="purple_500">#6200EE</color>
 </resources>

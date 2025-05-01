@@ -4,6 +4,7 @@ package com.example.headachediary.presentation.view.mainmenu;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -17,23 +18,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Настройка Toolbar
+        // 1. Инициализация Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Календарь");
 
-        // Настройка навигации
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+        // 2. Получаем NavController через View
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
-        NavController navController = navHostFragment.getNavController();
 
-        // Подключение BottomNavigationView к NavController
-        NavigationUI.setupWithNavController(bottomNav, navController);
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
 
-        // Смена заголовка Toolbar при переключении фрагментов
-        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            getSupportActionBar().setTitle(destination.getLabel());
-        });
+            // 3. Настройка BottomNavigationView
+            BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
+            NavigationUI.setupWithNavController(bottomNav, navController);
+
+            // 4. Обновление заголовка
+            navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(destination.getLabel());
+                }
+            });
+        }
     }
 }
