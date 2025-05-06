@@ -28,13 +28,13 @@
 
     <style name="InactiveText" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
 
     <style name="ButtonStyle.Danger" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/error</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:minHeight">48dp</item>
+        <item name="android:minHeight">@dimen/button_height</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
     </style>

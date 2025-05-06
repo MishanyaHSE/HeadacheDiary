@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.headachediary.R;
 import com.example.headachediary.domain.headache.NoteResponse;
-import com.example.headachediary.presentation.viewmodel.StateBase;
 import com.example.headachediary.presentation.viewmodel.mainmenu.CalendarViewModel;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
@@ -47,7 +46,7 @@ public class CalendarFragment extends Fragment {
 
     private MaterialCalendarView calendarView;
     private LinearLayout buttonsGroup;
-    private Button btnAdd, btnDelete, btnEdit;
+    private Button btnAdd, btnDelete, btnEdit, button3;
     private LocalDate dateForDelete;
 
     private ProgressDialog progressDialog;
@@ -72,6 +71,7 @@ public class CalendarFragment extends Fragment {
         btnAdd = view.findViewById(R.id.btnAdd);
         btnDelete = view.findViewById(R.id.btnDelete);
         btnEdit = view.findViewById(R.id.btnEdit);
+        button3 = view.findViewById(R.id.button3);
         calendarView = view.findViewById(R.id.calendarView);
         //Получаем с сервера ноуты
         calendarViewModel.loadDates(LocalDate.now());
@@ -110,6 +110,9 @@ public class CalendarFragment extends Fragment {
 
         btnDelete.setOnClickListener(v -> deleteNoteClick());
 //        requestPermissionLauncher.launch();
+        button3.setOnClickListener(v -> reportButtonClick());
+
+        setupLoadingReportObserver();
 
         return view;
     }
@@ -246,6 +249,14 @@ public class CalendarFragment extends Fragment {
                 .show();
     }
 
+    private void showSuccess(String message) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Отчет получен")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
 
     private void showButtonsForDate(int year, int month, int dayOfMonth) {
         // Показываем кнопки
@@ -268,9 +279,11 @@ public class CalendarFragment extends Fragment {
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                Log.d("PermissionResult", "Permission granted: " + isGranted);
                 if (isGranted) {
                     Toast.makeText(requireContext(), "Разрешение получено",
                             Toast.LENGTH_SHORT).show();
+                    calendarViewModel.getReport(LocalDate.now());
                 } else {
                     Toast.makeText(requireContext(), "Разрешение отклонено",
                             Toast.LENGTH_SHORT).show();
@@ -279,48 +292,58 @@ public class CalendarFragment extends Fragment {
 
     private void checkStoragePermission() {
         // Для API >= 33 (Android 13+) используем отдельные разрешения
+        Log.d("PermissionCheck", "SDK_INT: " + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Log.d("PermissionCheck", "Checking READ_MEDIA_IMAGES");
             if (ContextCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED) {
+                calendarViewModel.getReport(LocalDate.now());
+            } else {
                 requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
             }
         }
         // Для API 29-32 (Android 10-12L)
         else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Log.d("PermissionCheck", "API 29-32: No permission needed");
             // Разрешение не требуется для записи в папку Downloads
+            calendarViewModel.getReport(LocalDate.now());
         }
         // Для API < 29
         else {
+            Log.d("PermissionCheck", "Checking WRITE_EXTERNAL_STORAGE");
             if (ContextCompat.checkSelfPermission(requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                calendarViewModel.getReport(LocalDate.now());
+            } else {
                 requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
             }
         }
     }
 
-    private boolean isStoragePermissionGranted() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-                ContextCompat.checkSelfPermission(requireContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
+//    private boolean isStoragePermissionGranted() {
+//        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
+//                ContextCompat.checkSelfPermission(requireContext(),
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+//    }
+//
+//    private void requestPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
+//        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+//            requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        } else {
+//
+//        }
+//    }
 
-    private void requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES);
-        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        } else {
-            calendarViewModel.saveFile(requireContext());
-        }
-    }
-
-    private void saveFile() {
-        if (calendarViewModel.isStoragePermissionGranted(requireContext())) {
-            calendarViewModel.saveFile(requireContext());
-        } else {
-            requestPermission();
-        }
-    }
+//    private void saveFile() {
+//        if (calendarViewModel.isStoragePermissionGranted(requireContext())) {
+//            calendarViewModel.saveFile(requireContext());
+//        } else {
+//            requestPermission();
+//        }
+//    }
 
     private void handleSaveResult() {
         calendarViewModel.getReportSavingState().observe(getViewLifecycleOwner(), state -> {
@@ -341,19 +364,19 @@ public class CalendarFragment extends Fragment {
                     showLoading("Загружаем файл...");
                     break;
                 case SUCCESS:
-                    requestPermission();
+                    showSuccess("Сохранено в " + state.getData());
+                    hideLoading();
+                    break;
+                case ERROR:
+                    showError(state.getError());
+                    Log.d("ERROR WHILE LOADING", "error");
+                    break;
             }
         });
     }
 
     private void reportButtonClick() {
-        CalendarDay date = calendarView.getSelectedDate();
-        LocalDate reportDate = LocalDate.of(
-                date.getYear(),
-                date.getMonth(),
-                date.getDay()
-        );
-        calendarViewModel.getReport(reportDate);
+        checkStoragePermission();
     }
 
 }

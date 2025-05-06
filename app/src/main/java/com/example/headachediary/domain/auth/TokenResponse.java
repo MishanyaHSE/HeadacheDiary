@@ -13,10 +13,20 @@ public class TokenResponse{
     @Expose
     private String accessToken;
 
-    public String getAccess_token() {
+    @SerializedName("refresh_token")
+    @Expose
+    private String refreshToken;
+
+    public String getAccessToken() {
         return this.accessToken; }
+
+    public String getRefreshToken() {
+        return this.refreshToken; }
     public void setAccess_token(String access_token) {
         this.accessToken = access_token; }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken; }
 
     public String getToken_type() {
         return this.tokenType; }

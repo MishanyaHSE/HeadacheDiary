@@ -1,11 +1,8 @@
 package com.example.headachediary.presentation.view.auth;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,15 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.headachediary.R;
+import com.example.headachediary.data.source.util.manager.CredentialManager;
 import com.example.headachediary.data.source.util.manager.TokenManager;
 import com.example.headachediary.domain.auth.UserAuth;
 import com.example.headachediary.presentation.view.mainmenu.MainActivity;
@@ -33,6 +27,7 @@ public class LoginFragment extends Fragment {
     private LoginViewModel loginViewModel;
     private ProgressDialog progressDialog;
     private EditText emailEditText, passwordEditText;
+    private CredentialManager credentialManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +44,9 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(v -> goToRegister());
         forgotPassword.setOnClickListener(v -> goToForgotPassword());
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        credentialManager = new CredentialManager(requireContext());
         setupObserver();
+//        loginViewModel.login(credentialManager.getCred());
         return view;
     }
 
@@ -61,6 +58,7 @@ public class LoginFragment extends Fragment {
         cred.setPassword(password);
         Log.d("GETTING TOKEN", cred.toString());
         loginViewModel.login(cred);
+//        credentialManager.saveCred(cred);
     }
 
     private void goToRegister() {
@@ -99,6 +97,7 @@ public class LoginFragment extends Fragment {
             switch(state.getStatus()) {
                 case ERROR:
                     hideLoading();
+//                    credentialManager.deleteCred();
                     showError(state.getError());
                     break;
                 case LOADING:
@@ -107,7 +106,8 @@ public class LoginFragment extends Fragment {
                 case SUCCESS:
                     hideLoading();
                     TokenManager tokenManager = new TokenManager(requireContext());
-                    tokenManager.saveToken(state.getData().getAccess_token());
+                    tokenManager.saveToken(state.getData().getAccessToken(),
+                            state.getData().getRefreshToken());
                     Intent intent = new Intent(requireContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     requireContext().startActivity(intent);

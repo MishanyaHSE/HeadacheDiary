@@ -2,6 +2,7 @@ package com.example.headachediary.data.source.network;
 
 import android.content.Context;
 
+import com.example.headachediary.data.repository.Repository;
 import com.example.headachediary.data.source.util.manager.TokenManager;
 
 import okhttp3.OkHttpClient;
@@ -14,13 +15,35 @@ public class RetrofitClient {
     private static Retrofit retrofit = null;
 
     public static HeadacheAPI getApiService(Context context) {
+        TokenManager tokenManager = new TokenManager(context);
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        AuthInterceptor authInterceptor = new AuthInterceptor(new TokenManager(context), context);
+        AuthInterceptor authInterceptor = new AuthInterceptor(tokenManager, context);
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        RefreshInterceptor refreshInterceptor = new RefreshInterceptor(context,
+                tokenManager);
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .addInterceptor(authInterceptor)
+                .addInterceptor(refreshInterceptor)
+                .build();
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit.create(HeadacheAPI.class);
+    }
+
+    public static HeadacheAPI getApiServiceWithoutRefreshInterceptor(Context context) {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
                 .build();
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
